@@ -136,19 +136,6 @@ input,select,textarea{width:100%;padding:12px 14px;border:1px solid var(--line);
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,107,235,.11)}
 textarea{resize:vertical;min-height:96px}
 .hint{font-size:.79rem;color:var(--muted);margin-top:5px}
-.drop{border:1.5px dashed #C6D3E6;border-radius:11px;padding:22px;text-align:center;background:#FAFCFF;cursor:pointer;transition:.15s}
-.drop:hover,.drop.over{border-color:var(--blue);background:#F2F7FF}
-.drop .t{font-weight:600;color:var(--ink);font-size:.94rem}
-.drop .s{font-size:.8rem;color:var(--muted);margin-top:4px}
-.drop input[type=file]{display:none}
-.filelist{margin-top:12px}
-.fileitem{display:flex;justify-content:space-between;align-items:center;gap:12px;background:#F5F8FC;border:1px solid var(--line);border-radius:8px;padding:9px 13px;margin-bottom:7px;font-size:.85rem}
-.fileitem .nm{color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.fileitem .sz{color:var(--muted);font-size:.78rem;white-space:nowrap}
-.fileitem .rm{color:#B4402F;cursor:pointer;font-weight:700;border:none;background:none;font-size:1.05rem;line-height:1;padding:0 2px}
-.bar{height:5px;background:var(--line);border-radius:4px;overflow:hidden;margin-top:12px;display:none}
-.bar.on{display:block}
-.bar i{display:block;height:100%;background:var(--blue);width:0;transition:width .25s}
 .consent{display:flex;gap:10px;align-items:flex-start;font-size:.82rem;color:var(--muted);margin:6px 0 18px}
 .consent input{width:auto;margin-top:3px;flex:0 0 auto}
 .formnote{font-size:.8rem;color:var(--muted);margin-top:14px}
@@ -454,16 +441,6 @@ footer a:hover{color:#fff}
             <div class="field full"><label>Deal summary</label>
               <textarea name="Deal Summary" placeholder="Business plan, current occupancy or NOI, exit strategy, and anything a lender should know up front."></textarea></div>
             <div class="field full"><label>How did you hear about us?</label><input name="Referral Source"></div>
-<div class="field full">
-              <label>Supporting documents <span style="font-weight:400;color:var(--muted)">(optional, speeds up your term sheet)</span></label>
-              <label class="drop" id="drop">
-                <input type="file" id="files" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.jpg,.jpeg,.png,.zip">
-                <div class="t">Click to choose files, or drag them here</div>
-                <div class="s">Rent roll, operating statements, purchase contract, existing loan terms, PFS, photos<br>PDF, Word, Excel or images &middot; up to 10 MB per file, 25 MB total</div>
-              </label>
-              <div class="filelist" id="filelist"></div>
-              <div class="bar" id="bar"><i></i></div>
-            </div>
           </div>
           <div class="consent"><input type="checkbox" required id="c1"><label for="c1" style="font-weight:400;margin:0">I confirm the information provided is accurate and authorize ATZI Advisory to review this request and present it to prospective lenders on a confidential basis.</label></div>
           <button type="submit" class="btn lg">Submit Application</button>
@@ -622,96 +599,30 @@ document.querySelectorAll('[data-open]').forEach(function(b){
   b.onclick=function(){showTab(b.dataset.open)};
 });
 
-// ============ SUBMISSION HANDLER ============
-// Sends form data (and any uploaded documents) to your Google Apps Script
-// backend, which files documents in Drive, logs the row in Sheets, and emails you.
-var GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxIFo1RsGDn9JUMejmp8EliJvxeVA2qkspKf7nAqFhdedP46HTBuOh4Gl2fEpCspAk6/exec';
-
+// form submit -> Web3Forms (emails you directly)
 var msg=document.getElementById('msg');
-var picked=[];
-var MAX_FILE=10*1024*1024, MAX_TOTAL=25*1024*1024;
-
-// ---- file picker ----
-var drop=document.getElementById('drop'), input=document.getElementById('files'),
-    list=document.getElementById('filelist'), bar=document.getElementById('bar');
-
-function human(b){return b<1024?b+' B':b<1048576?(b/1024).toFixed(0)+' KB':(b/1048576).toFixed(1)+' MB'}
-function totalSize(){return picked.reduce(function(t,f){return t+f.size},0)}
-function render(){
-  if(!list) return;
-  list.innerHTML=picked.map(function(f,i){
-    return '<div class="fileitem"><span class="nm">'+f.name+'</span><span class="sz">'+human(f.size)+
-           ' <button type="button" class="rm" data-i="'+i+'" title="Remove">&times;</button></span></div>';
-  }).join('');
-  list.querySelectorAll('.rm').forEach(function(b){
-    b.onclick=function(){picked.splice(parseInt(b.dataset.i,10),1);render()};
-  });
-}
-function addFiles(fs){
-  Array.prototype.forEach.call(fs,function(f){
-    if(f.size>MAX_FILE){alert(f.name+' is larger than 10 MB and was skipped.');return}
-    if(totalSize()+f.size>MAX_TOTAL){alert('Total upload limit is 25 MB. '+f.name+' was skipped.');return}
-    picked.push(f);
-  });
-  render();
-}
-if(input){input.addEventListener('change',function(){addFiles(input.files);input.value=''})}
-if(drop){
-  ['dragenter','dragover'].forEach(function(ev){drop.addEventListener(ev,function(e){e.preventDefault();drop.classList.add('over')})});
-  ['dragleave','drop'].forEach(function(ev){drop.addEventListener(ev,function(e){e.preventDefault();drop.classList.remove('over')})});
-  drop.addEventListener('drop',function(e){if(e.dataTransfer&&e.dataTransfer.files)addFiles(e.dataTransfer.files)});
-}
-function readFile(f){
-  return new Promise(function(res,rej){
-    var r=new FileReader();
-    r.onload=function(){res({name:f.name,mimeType:f.type||'application/octet-stream',data:r.result.split(',')[1]})};
-    r.onerror=rej;
-    r.readAsDataURL(f);
-  });
-}
-
-// ---- submit ----
-var TYPE={'f-borrower':'Application','f-lender':'Lender','f-partner':'Partner'};
 document.querySelectorAll('form.pane').forEach(function(form){
   form.addEventListener('submit',function(e){
     e.preventDefault();
-    if(!form.checkValidity()){form.reportValidity();return}
+    if(!form.checkValidity()){form.reportValidity();return;}
     var btn=form.querySelector('button[type=submit]'), original=btn.textContent;
-    var isApp=form.id==='f-borrower';
-    btn.disabled=true; btn.textContent=(isApp&&picked.length)?'Uploadingâ€¦':'Sendingâ€¦';
-    if(isApp&&picked.length&&bar){bar.classList.add('on');bar.querySelector('i').style.width='25%'}
-
-    var fields={};
-    new FormData(form).forEach(function(v,k){
-      if(['access_key','subject','from_name','botcheck'].indexOf(k)===-1&&v) fields[k]=v;
-    });
-
-    var job=(isApp&&picked.length)?Promise.all(picked.map(readFile)):Promise.resolve([]);
-    job.then(function(files){
-      if(bar) bar.querySelector('i').style.width='65%';
-      return fetch(GOOGLE_SCRIPT_URL,{
-        method:'POST',
-        headers:{'Content-Type':'text/plain;charset=utf-8'},
-        body:JSON.stringify({formType:TYPE[form.id]||'Application',fields:fields,files:files})
-      });
+    btn.disabled=true; btn.textContent='Sending…';
+    var data=Object.fromEntries(new FormData(form));
+    fetch('https://api.web3forms.com/submit',{
+      method:'POST',
+      headers:{'Content-Type':'application/json',Accept:'application/json'},
+      body:JSON.stringify(data)
     }).then(function(r){return r.json()}).then(function(res){
-      if(bar) bar.querySelector('i').style.width='100%';
-      if(res&&res.success){
+      if(res.success){
         msg.className='msg ok';
-        msg.textContent='Thank you â€” your submission has been received'+
-          ((isApp&&picked.length)?' along with '+picked.length+' document'+(picked.length>1?'s':''):'')+
-          '. We review every inquiry personally and will be in touch shortly.';
-        form.reset(); picked=[]; render();
+        msg.textContent='Thank you — your submission has been received. We review every inquiry personally and will be in touch shortly.';
+        form.reset();
         msg.scrollIntoView({behavior:'smooth',block:'center'});
-      }else{throw new Error((res&&res.error)||'Failed')}
+      }else{throw new Error(res.message||'Failed')}
     }).catch(function(){
       msg.className='msg err';
-      msg.innerHTML='Something went wrong sending your submission. Please email us directly at <a href="mailto:info@atziadvisory.com">info@atziadvisory.com</a>.';
-      msg.scrollIntoView({behavior:'smooth',block:'center'});
-    }).finally(function(){
-      btn.disabled=false; btn.textContent=original;
-      if(bar) setTimeout(function(){bar.classList.remove('on');bar.querySelector('i').style.width='0'},700);
-    });
+      msg.innerHTML='Something went wrong sending your submission. Please email us directly at <a href="mailto:ben.k@atziadvisory.com">ben.k@atziadvisory.com</a>.';
+    }).finally(function(){btn.disabled=false;btn.textContent=original});
   });
 });
 </script>
