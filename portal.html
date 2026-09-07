@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Client Portal — ATZI Advisory</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23fff'/><polygon points='22,7 3,57 41,57' fill='%230C1A2E'/><polygon points='42,7 23,57 61,57' fill='%232F6BEB'/><polygon points='32,33.3 41,57 23,57' fill='%23173463'/><rect x='11' y='38.5' width='22' height='3.8' fill='%23fff'/><rect x='31' y='38.5' width='22' height='3.8' fill='%23fff'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0C1A2E;--blue:#2F6BEB;--blue-dk:#2453C4;--ink:#1B2436;--body:#41506A;--muted:#6B7A93;
+--line:#E3E9F2;--soft:#F5F8FC;--ok:#12A87B;--serif:'Lora',Georgia,serif;--sans:'Inter',-apple-system,'Segoe UI',Arial,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--soft);color:var(--body);line-height:1.6;font-size:15.5px}
+h1,h2,h3{font-family:var(--serif);color:var(--ink);line-height:1.2;font-weight:600}
+.wrap{max-width:940px;margin:0 auto;padding:0 22px}
+header{background:#fff;border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:70px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand .n1{font-family:var(--serif);font-weight:700;font-size:1.25rem;color:var(--ink);letter-spacing:.5px}
+.brand .n2{font-family:var(--serif);font-size:.56rem;font-weight:600;letter-spacing:.32em;color:var(--blue);display:block;margin-top:2px}
+.tagpill{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
+main{padding:38px 0 70px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px;margin-bottom:18px}
+.card h2{font-size:1.18rem;margin-bottom:4px}
+.card .sub{font-size:.86rem;color:var(--muted);margin-bottom:16px}
+/* gate */
+.gate{max-width:430px;margin:60px auto;text-align:center}
+.gate .card{padding:34px}
+input[type=text]{width:100%;padding:13px 15px;border:1px solid var(--line);border-radius:9px;font-family:var(--sans);font-size:1rem;text-align:center;letter-spacing:.12em;text-transform:uppercase}
+input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,107,235,.11)}
+.btn{background:var(--blue);color:#fff;border:none;padding:13px 26px;border-radius:9px;font-family:var(--sans);font-weight:600;font-size:.95rem;cursor:pointer;transition:.15s}
+.btn:hover{background:var(--blue-dk)} .btn:disabled{opacity:.55;cursor:default}
+.btn.sm{padding:10px 18px;font-size:.88rem}
+/* header block */
+.dealhead{background:var(--navy);color:#fff;border-radius:14px;padding:28px;margin-bottom:18px}
+.dealhead h1{color:#fff;font-size:1.5rem;margin-bottom:5px}
+.dealhead .meta{color:#9FB2CC;font-size:.88rem}
+.dealgrid{display:flex;gap:34px;flex-wrap:wrap;margin-top:20px;padding-top:18px;border-top:1px solid rgba(255,255,255,.14)}
+.dealgrid div .l{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:#8CA2C0}
+.dealgrid div .v{font-family:var(--serif);font-size:1.1rem;color:#fff;font-weight:600;margin-top:3px}
+/* stepper */
+.steps{list-style:none}
+.stp{display:flex;gap:15px;padding:11px 0}
+.dot{flex:0 0 26px;height:26px;border-radius:50%;border:2px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--muted);margin-top:1px}
+.stp.done .dot{background:var(--ok);border-color:var(--ok);color:#fff}
+.stp.now .dot{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 0 0 4px rgba(47,107,235,.15)}
+.stp .t{font-weight:600;color:var(--muted);font-size:.95rem}
+.stp.done .t{color:var(--ink)} .stp.now .t{color:var(--blue)}
+.stp .d{font-size:.83rem;color:var(--muted)}
+.badge{display:inline-block;background:#EAF1FE;color:var(--blue);font-size:.72rem;font-weight:700;letter-spacing:.06em;padding:4px 11px;border-radius:20px;text-transform:uppercase}
+/* lists */
+.req{display:flex;align-items:flex-start;gap:11px;padding:11px 0;border-bottom:1px solid var(--line);font-size:.94rem}
+.req:last-child{border-bottom:none}
+.req .box{flex:0 0 18px;height:18px;border:2px solid #C6D3E6;border-radius:5px;margin-top:3px}
+.req.have .box{background:var(--ok);border-color:var(--ok)}
+.req.have span{color:var(--muted);text-decoration:line-through}
+.filerow{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:.9rem}
+.filerow:last-child{border-bottom:none}
+.filerow .ok{color:var(--ok);font-weight:600;font-size:.8rem}
+/* upload */
+.drop{border:1.5px dashed #C6D3E6;border-radius:11px;padding:22px;text-align:center;background:#FAFCFF;cursor:pointer;display:block}
+.drop:hover,.drop.over{border-color:var(--blue);background:#F2F7FF}
+.drop input{display:none}
+.drop .t{font-weight:600;color:var(--ink);font-size:.93rem}
+.drop .s{font-size:.79rem;color:var(--muted);margin-top:4px}
+.note{background:#F4F7FC;border-left:3px solid var(--blue);border-radius:0 9px 9px 0;padding:13px 16px;font-size:.92rem;color:#3a475c}
+.msg{padding:13px 16px;border-radius:9px;font-size:.92rem;margin-bottom:14px;display:none}
+.msg.ok{display:block;background:#E9F6EF;color:#1B6B47;border:1px solid #BFE3D0}
+.msg.err{display:block;background:#FDEDEA;color:#A33A28;border:1px solid #F3CFC8}
+.foot{text-align:center;font-size:.8rem;color:var(--muted);padding:26px 0}
+.foot a{color:var(--blue)}
+.hide{display:none}
+.spin{display:inline-block;width:15px;height:15px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:7px}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media(max-width:640px){.dealgrid{gap:20px}.card{padding:20px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="index.html">
+      <svg width="34" height="34" viewBox="0 0 64 64">
+        <polygon points="22,7 3,57 41,57" fill="#0C1A2E"/><polygon points="42,7 23,57 61,57" fill="#2F6BEB"/>
+        <polygon points="32,33.3 41,57 23,57" fill="#173463"/>
+        <rect x="11" y="38.5" width="22" height="3.8" fill="#fff"/><rect x="31" y="38.5" width="22" height="3.8" fill="#fff"/>
+      </svg>
+      <span><span class="n1">ATZI</span><span class="n2">ADVISORY</span></span>
+    </a>
+    <span class="tagpill">Client Portal</span>
+  </div>
+</header>
+
+<main>
+  <!-- GATE -->
+  <div class="wrap gate" id="gate">
+    <div class="card">
+      <h2 style="margin-bottom:6px">Track your file</h2>
+      <p class="sub" style="margin-bottom:18px">Enter the reference number from your confirmation email.</p>
+      <div class="msg" id="gateMsg"></div>
+      <input type="text" id="tokenIn" placeholder="e.g. A1B2C3D4E5" maxlength="14" autocomplete="off">
+      <button class="btn" id="go" style="margin-top:14px;width:100%">View my file</button>
+      <p style="font-size:.8rem;color:var(--muted);margin-top:16px">Lost your reference number? Email
+        <a href="mailto:ben.k@atziadvisory.com">ben.k@atziadvisory.com</a></p>
+    </div>
+  </div>
+
+  <!-- PORTAL -->
+  <div class="wrap hide" id="view">
+    <div class="dealhead">
+      <h1 id="pProp">—</h1>
+      <div class="meta"><span id="pName"></span> &middot; Submitted <span id="pDate"></span> &middot; Ref <span id="pRef"></span></div>
+      <div class="dealgrid">
+        <div><div class="l">Loan amount</div><div class="v" id="pAmt">—</div></div>
+        <div><div class="l">Purpose</div><div class="v" id="pPurp">—</div></div>
+        <div><div class="l">Current stage</div><div class="v" id="pStage">—</div></div>
+        <div id="pCloseWrap" class="hide"><div class="l">Target close</div><div class="v" id="pClose">—</div></div>
+      </div>
+    </div>
+
+    <div class="card" id="nextWrap">
+      <h2>Where things stand</h2>
+      <div class="sub">Updated by your advisor as the file progresses.</div>
+      <div class="note" id="pNext">We have received your file and will be in touch shortly.</div>
+      <div id="pNoteWrap" class="hide" style="margin-top:12px">
+        <div class="sub" style="margin-bottom:6px">Note from your advisor</div>
+        <div class="note" id="pNote" style="border-left-color:#12A87B"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Loan progress</h2>
+      <div class="sub">Every file moves through these stages.</div>
+      <ul class="steps" id="pSteps"></ul>
+    </div>
+
+    <div class="card" id="reqWrap">
+      <h2>Documents requested</h2>
+      <div class="sub">Items your advisor needs to move the file forward.</div>
+      <div id="pReq"></div>
+    </div>
+
+    <div class="card">
+      <h2>Upload documents</h2>
+      <div class="sub">Files go straight into your secure deal folder.</div>
+      <div class="msg" id="upMsg"></div>
+      <label class="drop" id="drop">
+        <input type="file" id="files" multiple>
+        <div class="t">Click to choose files, or drag them here</div>
+        <div class="s">Up to 35 MB per file</div>
+      </label>
+      <div id="queue" style="margin-top:12px"></div>
+      <button class="btn sm hide" id="upBtn" style="margin-top:12px">Upload</button>
+      <div id="haveWrap" style="margin-top:20px" class="hide">
+        <div class="sub" style="margin-bottom:4px">Already received</div>
+        <div id="pHave"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Questions?</h2>
+      <p style="font-size:.94rem">Reply to any of our emails, or reach us at
+        <a href="mailto:ben.k@atziadvisory.com" style="color:var(--blue)">ben.k@atziadvisory.com</a>.</p>
+    </div>
+  </div>
+
+  <div class="foot">
+    ATZI Advisory &middot; Confidential. This portal reflects the current status of your financing request and is not a commitment to lend.
+  </div>
+</main>
+
+<script>
+var GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyvOBGsVOLRYM13qQbwFiC-MV-angehsE9RfQiFV0tdbmOgrANZ48wf7rWGmsxTs4Q3/exec';
+var token='', queue=[];
+
+function $(id){return document.getElementById(id)}
+function post(b){
+  return fetch(GOOGLE_SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(b)})
+    .then(function(r){return r.json()});
+}
+function human(b){return b<1024?b+' B':b<1048576?(b/1024).toFixed(0)+' KB':(b/1048576).toFixed(1)+' MB'}
+
+function load(t){
+  var btn=$('go'); btn.disabled=true; btn.innerHTML='<span class="spin"></span>Loading';
+  post({action:'status',token:t}).then(function(d){
+    if(!d||!d.success) throw new Error('nf');
+    token=t; render(d);
+    $('gate').classList.add('hide'); $('view').classList.remove('hide');
+    try{history.replaceState(null,'','portal.html?id='+t)}catch(e){}
+  }).catch(function(){
+    $('gateMsg').className='msg err';
+    $('gateMsg').textContent='We could not find a file with that reference number. Please check the number in your confirmation email.';
+  }).finally(function(){btn.disabled=false;btn.textContent='View my file'});
+}
+
+function render(d){
+  $('pProp').textContent=d.property||'Your financing request';
+  $('pName').textContent=d.name||'';
+  $('pDate').textContent=d.received||'';
+  $('pRef').textContent=token;
+  $('pAmt').textContent=d.loanAmount||'—';
+  $('pPurp').textContent=d.purpose||'—';
+  $('pStage').textContent=d.stage||'Received';
+  if(d.targetClose){$('pClose').textContent=d.targetClose;$('pCloseWrap').classList.remove('hide')}
+  if(d.nextStep) $('pNext').textContent=d.nextStep;
+  if(d.note){$('pNote').textContent=d.note;$('pNoteWrap').classList.remove('hide')}
+
+  // stepper
+  $('pSteps').innerHTML=(d.stages||[]).map(function(s,i){
+    var cls=i<d.stageIndex?'done':(i===d.stageIndex?'now':'');
+    var mark=i<d.stageIndex?'&#10003;':(i+1);
+    var badge=i===d.stageIndex?' <span class="badge">Current</span>':'';
+    return '<li class="stp '+cls+'"><div class="dot">'+mark+'</div><div><div class="t">'+s+badge+'</div></div></li>';
+  }).join('');
+
+  // requested docs
+  var have=(d.uploaded||[]).map(function(x){return x.toLowerCase()});
+  if(d.documents&&d.documents.length){
+    $('pReq').innerHTML=d.documents.map(function(x){
+      var got=have.some(function(u){return u.indexOf(x.toLowerCase().split(' ')[0])>-1});
+      return '<div class="req '+(got?'have':'')+'"><div class="box"></div><span>'+x+'</span></div>';
+    }).join('');
+  }else{
+    $('pReq').innerHTML='<p style="font-size:.93rem;color:var(--muted)">Nothing outstanding right now. We will post any requests here.</p>';
+  }
+
+  if(d.uploaded&&d.uploaded.length){
+    $('haveWrap').classList.remove('hide');
+    $('pHave').innerHTML=d.uploaded.map(function(n){
+      return '<div class="filerow"><span>'+n+'</span><span class="ok">Received</span></div>';
+    }).join('');
+  }
+}
+
+// gate
+$('go').onclick=function(){
+  var v=$('tokenIn').value.trim().toUpperCase();
+  if(!v){$('gateMsg').className='msg err';$('gateMsg').textContent='Please enter your reference number.';return}
+  load(v);
+};
+$('tokenIn').addEventListener('keydown',function(e){if(e.key==='Enter')$('go').click()});
+
+// upload
+var drop=$('drop'),input=$('files'),qEl=$('queue'),upBtn=$('upBtn'),upMsg=$('upMsg');
+function renderQ(){
+  qEl.innerHTML=queue.map(function(f,i){
+    return '<div class="filerow"><span>'+f.name+'</span><span style="color:var(--muted)">'+human(f.size)+
+           ' <button data-i="'+i+'" style="border:none;background:none;color:#B4402F;cursor:pointer;font-weight:700">&times;</button></span></div>';
+  }).join('');
+  qEl.querySelectorAll('button').forEach(function(b){b.onclick=function(){queue.splice(+b.dataset.i,1);renderQ()}});
+  upBtn.classList.toggle('hide',queue.length===0);
+}
+function add(fs){
+  Array.prototype.forEach.call(fs,function(f){
+    if(f.size>35*1024*1024){alert(f.name+' is over 35 MB. Please email it to us.');return}
+    queue.push(f);
+  });
+  renderQ();
+}
+input.addEventListener('change',function(){add(input.files);input.value=''});
+['dragenter','dragover'].forEach(function(ev){drop.addEventListener(ev,function(e){e.preventDefault();drop.classList.add('over')})});
+['dragleave','drop'].forEach(function(ev){drop.addEventListener(ev,function(e){e.preventDefault();drop.classList.remove('over')})});
+drop.addEventListener('drop',function(e){if(e.dataTransfer)add(e.dataTransfer.files)});
+
+upBtn.onclick=function(){
+  if(!queue.length) return;
+  upBtn.disabled=true; upMsg.className='msg';
+  var done=0, total=queue.length, list=queue.slice();
+  var chain=Promise.resolve();
+  list.forEach(function(f,i){
+    chain=chain.then(function(){
+      upBtn.innerHTML='<span class="spin"></span>Uploading '+(i+1)+' of '+total;
+      return new Promise(function(res,rej){
+        var r=new FileReader();
+        r.onload=function(){res(r.result.split(',')[1])};
+        r.onerror=rej; r.readAsDataURL(f);
+      }).then(function(b64){
+        return post({action:'portalUpload',token:token,fileName:f.name,mimeType:f.type,data:b64});
+      }).then(function(res){ if(!res||!res.success) throw new Error('fail'); done++; });
+    });
+  });
+  chain.then(function(){
+    upMsg.className='msg ok';
+    upMsg.textContent=done+' document'+(done>1?'s':'')+' uploaded. Your advisor has been notified.';
+    queue=[]; renderQ();
+    return post({action:'status',token:token}).then(function(d){if(d&&d.success)render(d)});
+  }).catch(function(){
+    upMsg.className='msg err';
+    upMsg.innerHTML='Upload failed. Please try again or email the files to <a href="mailto:ben.k@atziadvisory.com">ben.k@atziadvisory.com</a>.';
+  }).finally(function(){upBtn.disabled=false;upBtn.textContent='Upload'});
+};
+
+// auto-open from ?id=
+(function(){
+  var m=location.search.match(/[?&]id=([^&]+)/);
+  if(m){$('tokenIn').value=decodeURIComponent(m[1]).toUpperCase();load($('tokenIn').value)}
+})();
+</script>
+</body>
+</html>

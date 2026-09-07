@@ -136,12 +136,6 @@ input,select,textarea{width:100%;padding:12px 14px;border:1px solid var(--line);
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,107,235,.11)}
 textarea{resize:vertical;min-height:96px}
 .hint{font-size:.79rem;color:var(--muted);margin-top:5px}
-.agbox{border:1px solid var(--line);border-radius:11px;background:#FAFCFF;padding:18px 20px;max-height:210px;overflow-y:auto;font-size:.86rem;line-height:1.6;color:var(--body)}
-.agbox h4{font-family:var(--sans);font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin:14px 0 5px;font-weight:700}
-.agbox h4:first-child{margin-top:0}
-.agbox p{margin-bottom:9px;font-size:.86rem}
-.cond{display:none;border-left:3px solid var(--blue);padding-left:16px;margin-top:4px}
-.cond.on{display:block}
 .optgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px 14px;border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#FAFCFF}
 .optgrid label{display:flex;align-items:center;gap:7px;font-size:.85rem;font-weight:400;color:var(--body);margin:0;cursor:pointer}
 .optgrid input{width:auto;margin:0;flex:0 0 auto}
@@ -226,7 +220,6 @@ footer a:hover{color:#fff}
       <a href="#process">Process</a>
       <a href="#who">Who We Serve</a>
       <a href="#faq">FAQ</a>
-      <a href="portal.html">Client Portal</a>
       <a href="#apply" class="btn">Apply for Financing</a>
     </nav>
     <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
@@ -463,14 +456,6 @@ footer a:hover{color:#fff}
                 <option>First-time investor</option><option>2–5 transactions</option>
                 <option>6–20 transactions</option><option>20+ transactions</option>
               </select></div>
-            <div class="field full"><label>Has this property been presented to any lenders in the past? <span class="req">*</span></label>
-              <select name="Previously Presented" id="prevSel" required>
-                <option value="">Select&hellip;</option>
-                <option>No</option>
-                <option>Yes</option>
-              </select>
-              <div class="hint">This matters. Lenders price a deal differently once it has been shopped, so knowing where it has been lets us target lenders who have not already seen it.</div>
-            </div>
             <div class="field full"><label>Deal summary</label>
               <textarea name="Deal Summary" placeholder="Business plan, current occupancy or NOI, exit strategy, and anything a lender should know up front."></textarea></div>
             <div class="field full"><label>How did you hear about us?</label><input name="Referral Source"></div>
@@ -485,23 +470,6 @@ footer a:hover{color:#fff}
               <div class="bar" id="bar"><i></i></div>
             </div>
           </div>
-          <div class="field full" style="margin-top:6px">
-            <label>Engagement terms <span class="req">*</span></label>
-            <div class="agbox">
-              <h4>Exclusive engagement</h4>
-              <p>By submitting this application, you engage ATZI Advisory ("the Advisor") on an exclusive basis to source, structure and place financing for the property identified above, for a period of ninety (90) days from the date of submission unless extended or terminated in writing.</p>
-              <h4>Exclusivity and disclosure</h4>
-              <p>During the engagement, you agree to work exclusively with the Advisor in procuring a lender for this transaction. If you engage, or intend to engage, another advisor, broker or intermediary for this property during the engagement period, you must notify the Advisor in writing or verbally before doing so.</p>
-              <p>If financing for this property is closed through another advisor, broker or intermediary during the engagement period without such disclosure, a fee equal to the Advisor's standard advisory fee of one percent (1%) of the financed amount may become due and payable to the Advisor.</p>
-              <h4>Direct lender contact</h4>
-              <p>Lenders introduced to you by the Advisor are introduced in confidence. Closing a transaction directly with an introduced lender, or through a third party, in order to avoid the Advisor's fee, does not relieve you of the fee obligation.</p>
-              <h4>Fees</h4>
-              <p>The Advisor's fee is one percent (1%) of the financed amount, earned upon closing and payable from loan proceeds. No fee is due if no loan closes. There are no upfront fees, retainers or application charges.</p>
-              <h4>No commitment to lend</h4>
-              <p>The Advisor is not a lender and does not commit to provide financing. All financing is subject to third-party lender approval, underwriting and final documentation. Nothing here guarantees a loan, specific terms, or a closing timeline.</p>
-              <h4>Termination</h4>
-              <p>Either party may terminate this engagement with written notice. Fee obligations survive termination for any lender introduced by the Advisor during the engagement period, for a period of six (6) months following termination.</p>
-            </div>
           <div class="consent"><input type="checkbox" required id="c1"><label for="c1" style="font-weight:400;margin:0">I confirm the information provided is accurate and authorize ATZI Advisory to review this request and present it to prospective lenders on a confidential basis.</label></div>
           <button type="submit" class="btn lg">Submit Application</button>
           <p class="formnote">No fee unless your loan closes. Submitting does not create a lending commitment or an obligation on either side.</p>
@@ -753,19 +721,6 @@ function post(body){
 }
 function setBar(pct){ if(barFill) barFill.style.width=Math.max(0,Math.min(100,pct))+'%' }
 
-// --- conditional: previously presented to lenders ---
-(function(){
-  var sel=document.getElementById('prevSel'), cond=document.getElementById('prevCond');
-  if(!sel||!cond) return;
-  var kids=['prevWhen','prevCount','prevWho'].map(function(i){return document.getElementById(i)});
-  function sync(){
-    var yes=sel.value==='Yes';
-    cond.classList.toggle('on',yes);
-    kids.forEach(function(el){ if(!el) return; if(yes){el.setAttribute('required','required')} else {el.removeAttribute('required'); el.value=''} });
-  }
-  sel.addEventListener('change',sync); sync();
-})();
-
 var TYPE={'f-borrower':'Application','f-lender':'Lender','f-partner':'Partner'};
 
 document.querySelectorAll('form.pane').forEach(function(form){
@@ -822,10 +777,9 @@ document.querySelectorAll('form.pane').forEach(function(form){
       if(!res||!res.success) throw new Error((res&&res.error)||'Failed');
       setBar(100);
       msg.className='msg ok';
-      var link=(res&&res.portal)?' <a href="'+res.portal+'" style="color:#1B6B47;font-weight:700;text-decoration:underline">Track your file here</a>.':'';
-      msg.innerHTML='Thank you — your submission has been received'+
+      msg.textContent='Thank you — your submission has been received'+
         (files.length?' along with '+files.length+' document'+(files.length>1?'s':''):'')+
-        '. A confirmation email is on its way.'+link;
+        '. We review every inquiry personally and will be in touch shortly.';
       form.reset(); picked=[]; render();
       msg.scrollIntoView({behavior:'smooth',block:'center'});
     }).catch(function(err){
