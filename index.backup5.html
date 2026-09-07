@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -457,9 +457,9 @@ footer a:hover{color:#fff}
 <div class="field full">
               <label>Supporting documents <span style="font-weight:400;color:var(--muted)">(optional, speeds up your term sheet)</span></label>
               <label class="drop" id="drop">
-                <input type="file" id="files" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.xlsm,.csv,.ppt,.pptx,.jpg,.jpeg,.png,.heic,.tif,.tiff,.zip,.txt">
+                <input type="file" id="files" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.jpg,.jpeg,.png,.zip">
                 <div class="t">Click to choose files, or drag them here</div>
-                <div class="s">Rent roll, operating statements, purchase contract, existing loan terms, PFS, photos<br>PDF, Word, Excel, images or ZIP &middot; up to 35 MB per file, no limit on how many</div>
+                <div class="s">Rent roll, operating statements, purchase contract, existing loan terms, PFS, photos<br>PDF, Word, Excel or images &middot; up to 10 MB per file, 25 MB total</div>
               </label>
               <div class="filelist" id="filelist"></div>
               <div class="bar" id="bar"><i></i></div>
@@ -622,19 +622,21 @@ document.querySelectorAll('[data-open]').forEach(function(b){
   b.onclick=function(){showTab(b.dataset.open)};
 });
 
-// ============ SUBMISSION HANDLER (v2) ============
-// Documents upload one request per file, so large files and many of them are fine.
-var GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx3bgfEuGsvLLWI0CaK1YT8EuhxRyG52HyHp9MZEzVWU3KGT56127jkC3xNeazfuYA/exec';
+// ============ SUBMISSION HANDLER ============
+// Sends form data (and any uploaded documents) to your Google Apps Script
+// backend, which files documents in Drive, logs the row in Sheets, and emails you.
+var GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxIFo1RsGDn9JUMejmp8EliJvxeVA2qkspKf7nAqFhdedP46HTBuOh4Gl2fEpCspAk6/exec';
 
 var msg=document.getElementById('msg');
 var picked=[];
-var MAX_FILE=35*1024*1024;
+var MAX_FILE=10*1024*1024, MAX_TOTAL=25*1024*1024;
 
+// ---- file picker ----
 var drop=document.getElementById('drop'), input=document.getElementById('files'),
-    list=document.getElementById('filelist'), bar=document.getElementById('bar'),
-    barFill=bar?bar.querySelector('i'):null;
+    list=document.getElementById('filelist'), bar=document.getElementById('bar');
 
 function human(b){return b<1024?b+' B':b<1048576?(b/1024).toFixed(0)+' KB':(b/1048576).toFixed(1)+' MB'}
+function totalSize(){return picked.reduce(function(t,f){return t+f.size},0)}
 function render(){
   if(!list) return;
   list.innerHTML=picked.map(function(f,i){
@@ -646,15 +648,11 @@ function render(){
   });
 }
 function addFiles(fs){
-  var skipped=[];
   Array.prototype.forEach.call(fs,function(f){
-    if(f.size>MAX_FILE){skipped.push(f.name);return}
+    if(f.size>MAX_FILE){alert(f.name+' is larger than 10 MB and was skipped.');return}
+    if(totalSize()+f.size>MAX_TOTAL){alert('Total upload limit is 25 MB. '+f.name+' was skipped.');return}
     picked.push(f);
   });
-  if(skipped.length){
-    alert('These files are over the 35 MB limit and were not added:\n\n'+skipped.join('\n')+
-          '\n\nPlease email them to us directly and we will add them to your file.');
-  }
   render();
 }
 if(input){input.addEventListener('change',function(){addFiles(input.files);input.value=''})}
@@ -666,85 +664,53 @@ if(drop){
 function readFile(f){
   return new Promise(function(res,rej){
     var r=new FileReader();
-    r.onload=function(){res(r.result.split(',')[1])};
+    r.onload=function(){res({name:f.name,mimeType:f.type||'application/octet-stream',data:r.result.split(',')[1]})};
     r.onerror=rej;
     r.readAsDataURL(f);
   });
 }
-function post(body){
-  return fetch(GOOGLE_SCRIPT_URL,{
-    method:'POST',
-    headers:{'Content-Type':'text/plain;charset=utf-8'},
-    body:JSON.stringify(body)
-  }).then(function(r){return r.json()});
-}
-function setBar(pct){ if(barFill) barFill.style.width=Math.max(0,Math.min(100,pct))+'%' }
 
+// ---- submit ----
 var TYPE={'f-borrower':'Application','f-lender':'Lender','f-partner':'Partner'};
-
 document.querySelectorAll('form.pane').forEach(function(form){
   form.addEventListener('submit',function(e){
     e.preventDefault();
     if(!form.checkValidity()){form.reportValidity();return}
     var btn=form.querySelector('button[type=submit]'), original=btn.textContent;
     var isApp=form.id==='f-borrower';
-    var files=isApp?picked.slice():[];
-    var type=TYPE[form.id]||'Application';
+    btn.disabled=true; btn.textContent=(isApp&&picked.length)?'Uploadingâ€¦':'Sendingâ€¦';
+    if(isApp&&picked.length&&bar){bar.classList.add('on');bar.querySelector('i').style.width='25%'}
 
     var fields={};
     new FormData(form).forEach(function(v,k){
       if(['access_key','subject','from_name','botcheck'].indexOf(k)===-1&&v) fields[k]=v;
     });
 
-    btn.disabled=true;
-    msg.className='msg';
-    if(files.length){ if(bar){bar.classList.add('on');setBar(3)} btn.textContent='Uploading 1 of '+files.length+'...'; }
-    else { btn.textContent='Sending...'; }
-
-    var job;
-    if(!files.length){
-      job=post({action:'submit',formType:type,fields:fields});
-    }else{
-      var folderId='', folderUrl='', names=[];
-      job=post({action:'start',formType:type,fields:fields}).then(function(res){
-        if(!res||!res.success) throw new Error('start failed');
-        folderId=res.folderId; folderUrl=res.folderUrl;
-        var chain=Promise.resolve();
-        files.forEach(function(f,i){
-          chain=chain.then(function(){
-            btn.textContent='Uploading '+(i+1)+' of '+files.length+'...';
-            return readFile(f).then(function(b64){
-              return post({action:'file',folderId:folderId,fileName:f.name,mimeType:f.type,data:b64});
-            }).then(function(r){
-              if(!r||!r.success) throw new Error('upload failed: '+f.name);
-              names.push(f.name);
-              setBar(5+((i+1)/files.length)*88);
-            });
-          });
-        });
-        return chain;
-      }).then(function(){
-        btn.textContent='Finishing...';
-        return post({action:'finish',formType:type,fields:fields,folderId:folderId,folderUrl:folderUrl,fileNames:names});
+    var job=(isApp&&picked.length)?Promise.all(picked.map(readFile)):Promise.resolve([]);
+    job.then(function(files){
+      if(bar) bar.querySelector('i').style.width='65%';
+      return fetch(GOOGLE_SCRIPT_URL,{
+        method:'POST',
+        headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body:JSON.stringify({formType:TYPE[form.id]||'Application',fields:fields,files:files})
       });
-    }
-
-    job.then(function(res){
-      if(!res||!res.success) throw new Error((res&&res.error)||'Failed');
-      setBar(100);
-      msg.className='msg ok';
-      msg.textContent='Thank you — your submission has been received'+
-        (files.length?' along with '+files.length+' document'+(files.length>1?'s':''):'')+
-        '. We review every inquiry personally and will be in touch shortly.';
-      form.reset(); picked=[]; render();
-      msg.scrollIntoView({behavior:'smooth',block:'center'});
-    }).catch(function(err){
+    }).then(function(r){return r.json()}).then(function(res){
+      if(bar) bar.querySelector('i').style.width='100%';
+      if(res&&res.success){
+        msg.className='msg ok';
+        msg.textContent='Thank you â€” your submission has been received'+
+          ((isApp&&picked.length)?' along with '+picked.length+' document'+(picked.length>1?'s':''):'')+
+          '. We review every inquiry personally and will be in touch shortly.';
+        form.reset(); picked=[]; render();
+        msg.scrollIntoView({behavior:'smooth',block:'center'});
+      }else{throw new Error((res&&res.error)||'Failed')}
+    }).catch(function(){
       msg.className='msg err';
       msg.innerHTML='Something went wrong sending your submission. Please email us directly at <a href="mailto:info@atziadvisory.com">info@atziadvisory.com</a>.';
       msg.scrollIntoView({behavior:'smooth',block:'center'});
     }).finally(function(){
       btn.disabled=false; btn.textContent=original;
-      if(bar) setTimeout(function(){bar.classList.remove('on');setBar(0)},900);
+      if(bar) setTimeout(function(){bar.classList.remove('on');bar.querySelector('i').style.width='0'},700);
     });
   });
 });
