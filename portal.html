@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Client Portal — ATZI Advisory</title>
+<title>Client Portal â€” ATZI Advisory</title>
 <meta name="robots" content="noindex,nofollow">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23fff'/><polygon points='22,7 3,57 41,57' fill='%230C1A2E'/><polygon points='42,7 23,57 61,57' fill='%232F6BEB'/><polygon points='32,33.3 41,57 23,57' fill='%23173463'/><rect x='11' y='38.5' width='22' height='3.8' fill='%23fff'/><rect x='31' y='38.5' width='22' height='3.8' fill='%23fff'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -111,13 +111,13 @@ input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,1
   <!-- PORTAL -->
   <div class="wrap hide" id="view">
     <div class="dealhead">
-      <h1 id="pProp">—</h1>
+      <h1 id="pProp">â€”</h1>
       <div class="meta"><span id="pName"></span> &middot; Submitted <span id="pDate"></span> &middot; Ref <span id="pRef"></span></div>
       <div class="dealgrid">
-        <div><div class="l">Loan amount</div><div class="v" id="pAmt">—</div></div>
-        <div><div class="l">Purpose</div><div class="v" id="pPurp">—</div></div>
-        <div><div class="l">Current stage</div><div class="v" id="pStage">—</div></div>
-        <div id="pCloseWrap" class="hide"><div class="l">Target close</div><div class="v" id="pClose">—</div></div>
+        <div><div class="l">Loan amount</div><div class="v" id="pAmt">â€”</div></div>
+        <div><div class="l">Purpose</div><div class="v" id="pPurp">â€”</div></div>
+        <div><div class="l">Current stage</div><div class="v" id="pStage">â€”</div></div>
+        <div id="pCloseWrap" class="hide"><div class="l">Target close</div><div class="v" id="pClose">â€”</div></div>
       </div>
     </div>
 
@@ -173,7 +173,7 @@ input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,1
 </main>
 
 <script>
-var GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyvOBGsVOLRYM13qQbwFiC-MV-angehsE9RfQiFV0tdbmOgrANZ48wf7rWGmsxTs4Q3/exec';
+var GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwwl72XOJgQqp5CdjNwdPgGH-TFCU66S0xQmhcrYjqAW0HTujvffWWw7p2ywflWH3Vv/exec';
 var token='', queue=[];
 
 function $(id){return document.getElementById(id)}
@@ -201,8 +201,8 @@ function render(d){
   $('pName').textContent=d.name||'';
   $('pDate').textContent=d.received||'';
   $('pRef').textContent=token;
-  $('pAmt').textContent=d.loanAmount||'—';
-  $('pPurp').textContent=d.purpose||'—';
+  $('pAmt').textContent=d.loanAmount||'â€”';
+  $('pPurp').textContent=d.purpose||'â€”';
   $('pStage').textContent=d.stage||'Received';
   if(d.targetClose){$('pClose').textContent=d.targetClose;$('pCloseWrap').classList.remove('hide')}
   if(d.nextStep) $('pNext').textContent=d.nextStep;
