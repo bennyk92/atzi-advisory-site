@@ -31,7 +31,6 @@
       </div>
       <a href="portal.html">Client Portal</a>
     </nav>
-    <a href="apply-borrower.html" class="btn navcta">Apply for Financing</a>
     <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
 </header>
@@ -60,7 +59,7 @@
       <p>Open any stage below to see what happens and why it matters.</p>
     </div>
 <details class="acc"><summary><span><span class="st">Underwriting before the deal goes out</span><span class="sd">What we do with your file before any lender sees it</span></span><span class="plus"></span></summary><div class="body"><p>Before a package leaves our desk we build the deal the way a credit officer will read it. That means sizing the loan against both the as-is and stabilized position, testing debt service coverage at realistic rates rather than the rate you hope for, and laying out sources and uses so there is no unexplained gap.</p><ul><li><b>Sizing and leverage.</b> What the asset actually supports on LTV, LTC and coverage, not what the borrower wants to hear.</li><li><b>Sources and uses.</b> Where every dollar comes from and goes, including reserves, carry and closing costs.</li><li><b>Sponsor position.</b> Experience, liquidity and net worth relative to what lenders in this asset class require.</li><li><b>The exit.</b> Sale, refinance or lease-up, tested against a timeline that survives contact with reality.</li></ul><p>The point is to surface problems early, while they can still be solved, rather than three weeks into diligence when a lender finds them and the deal loses momentum.</p></div></details>
-<details class="acc"><summary><span><span class="st">Knowing each lender's box</span><span class="sd">Why targeting beats volume</span></span><span class="plus"></span></summary><div class="body"><p>A lending box is more than a product sheet. It is the combination of asset types a lender is comfortable with, the geographies they will travel to, their leverage tolerance, the sponsor profile their credit committee expects, and, crucially, what they are actively funding right now.</p><p>That last piece moves constantly. A lender who was aggressive on multifamily bridge in the spring may be full by the autumn. A construction lender may quietly stop taking ground-up outside their home market. None of that appears on a website.</p><p>We track those parameters across a network of more than 60 capital sources and keep them current through direct relationships. When your deal goes out, it goes to lenders who can genuinely execute it.</p></div></details>
+<details class="acc"><summary><span><span class="st">Knowing each lender's box</span><span class="sd">Why targeting beats volume</span></span><span class="plus"></span></summary><div class="body"><p>A lending box is more than a product sheet. It is the combination of asset types a lender is comfortable with, the geographies they will travel to, their leverage tolerance, the sponsor profile their credit committee expects, and, crucially, what they are actively funding right now.</p><p>That last piece moves constantly. A lender who was aggressive on multifamily bridge in the spring may be full by the autumn. A construction lender may quietly stop taking ground-up outside their home market. None of that appears on a website.</p><p>We track those parameters across a network of more than 100 capital sources and keep them current through direct relationships. When your deal goes out, it goes to lenders who can genuinely execute it.</p></div></details>
 <details class="acc"><summary><span><span class="st">Why over-shopping a deal costs you money</span><span class="sd">The hidden price of a scattergun approach</span></span><span class="plus"></span></summary><div class="body"><p>Lenders talk. When the same file arrives from four different brokers, or a lender recognises a deal they have already seen and passed on, it signals a transaction the market has rejected. That perception affects pricing and appetite before anyone has opened the rent roll.</p><p>This is also why we ask, on the application, whether the property has already been presented to lenders and to whom. It is not a judgment. It tells us which doors are still fresh and lets us route around the ones that are not.</p></div></details>
 <details class="acc"><summary><span><span class="st">Managing diligence so the timeline holds</span><span class="sd">What happens between term sheet and funding</span></span><span class="plus"></span></summary><div class="body"><p>Most deals do not die at the term sheet. They die in diligence, when an appraisal comes in late, an estoppel is missing, an insurance binder does not match lender requirements or a title exception surfaces that nobody chased.</p><p>We run the checklist actively: ordering third-party reports early, keeping counsel and title moving in parallel rather than in sequence, and following up on every outstanding item until it is cleared. You see the same list we do in your portal.</p></div></details>
 <details class="acc"><summary><span><span class="st">What we do not do</span><span class="sd">Being clear about the limits</span></span><span class="plus"></span></summary><div class="body"><p>We are not a lender. We do not fund loans, hold paper or take credit risk, and we cannot commit to financing on any lender's behalf. Every approval comes from a third-party lender under their own underwriting.</p><p>We also will not take a deal we do not believe is placeable simply to have it on the books. If your transaction is not financeable in the current market, we will tell you that in the first conversation and explain what would need to change.</p></div></details>
@@ -103,6 +102,15 @@
 document.getElementById('yr').textContent=new Date().getFullYear();
 var bg=document.getElementById('burger');
 if(bg) bg.onclick=function(){document.getElementById('menu').classList.toggle('open')};
+var dd=document.querySelector('.drop');
+if(dd){
+  var dt=dd.querySelector('.dt');
+  dt.addEventListener('click',function(e){e.stopPropagation();dd.classList.toggle('open')});
+  dt.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();dd.classList.toggle('open')}});
+  document.addEventListener('click',function(e){if(!dd.contains(e.target))dd.classList.remove('open')});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')dd.classList.remove('open')});
+}
+
 </script>
 </body>
 </html>

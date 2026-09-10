@@ -88,7 +88,6 @@ textarea{resize:vertical;min-height:96px}
       </div>
       <a href="portal.html">Client Portal</a>
     </nav>
-    <a href="apply-borrower.html" class="btn navcta">Apply for Financing</a>
     <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
 </header>
@@ -480,6 +479,15 @@ function send(form){
 document.getElementById('yr').textContent=new Date().getFullYear();
 var bg=document.getElementById('burger');
 if(bg) bg.onclick=function(){document.getElementById('menu').classList.toggle('open')};
+var dd=document.querySelector('.drop');
+if(dd){
+  var dt=dd.querySelector('.dt');
+  dt.addEventListener('click',function(e){e.stopPropagation();dd.classList.toggle('open')});
+  dt.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();dd.classList.toggle('open')}});
+  document.addEventListener('click',function(e){if(!dd.contains(e.target))dd.classList.remove('open')});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')dd.classList.remove('open')});
+}
+
 </script>
 </body>
 </html>
