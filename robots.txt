@@ -1,2 +1,3 @@
-﻿User-agent: *
+-e User-agent: *
 Allow: /
+Sitemap: https://atziadvisory.com/sitemap.xml

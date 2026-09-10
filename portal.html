@@ -3,56 +3,36 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Client Portal — ATZI Advisory</title>
-<meta name="robots" content="noindex,nofollow">
+<title>Client Portal &mdash; ATZI Advisory</title>
+<meta name="description" content="Track the status of your commercial real estate financing request with ATZI Advisory.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23fff'/><polygon points='22,7 3,57 41,57' fill='%230C1A2E'/><polygon points='42,7 23,57 61,57' fill='%232F6BEB'/><polygon points='32,33.3 41,57 23,57' fill='%23173463'/><rect x='11' y='38.5' width='22' height='3.8' fill='%23fff'/><rect x='31' y='38.5' width='22' height='3.8' fill='%23fff'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<meta name="robots" content="noindex,nofollow">
 <style>
-:root{--navy:#0C1A2E;--blue:#2F6BEB;--blue-dk:#2453C4;--ink:#1B2436;--body:#41506A;--muted:#6B7A93;
---line:#E3E9F2;--soft:#F5F8FC;--ok:#12A87B;--serif:'Lora',Georgia,serif;--sans:'Inter',-apple-system,'Segoe UI',Arial,sans-serif}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--sans);background:var(--soft);color:var(--body);line-height:1.6;font-size:15.5px}
-h1,h2,h3{font-family:var(--serif);color:var(--ink);line-height:1.2;font-weight:600}
-.wrap{max-width:940px;margin:0 auto;padding:0 22px}
-header{background:#fff;border-bottom:1px solid var(--line)}
-.nav{display:flex;align-items:center;justify-content:space-between;height:70px}
-.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
-.brand .n1{font-family:var(--serif);font-weight:700;font-size:1.25rem;color:var(--ink);letter-spacing:.5px}
-.brand .n2{font-family:var(--serif);font-size:.56rem;font-weight:600;letter-spacing:.32em;color:var(--blue);display:block;margin-top:2px}
 .tagpill{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
-main{padding:38px 0 70px}
 .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px;margin-bottom:18px}
 .card h2{font-size:1.18rem;margin-bottom:4px}
 .card .sub{font-size:.86rem;color:var(--muted);margin-bottom:16px}
-/* gate */
-.gate{max-width:430px;margin:60px auto;text-align:center}
 .gate .card{padding:34px}
 input[type=text]{width:100%;padding:13px 15px;border:1px solid var(--line);border-radius:9px;font-family:var(--sans);font-size:1rem;text-align:center;letter-spacing:.12em;text-transform:uppercase}
-input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,107,235,.11)}
-.btn{background:var(--blue);color:#fff;border:none;padding:13px 26px;border-radius:9px;font-family:var(--sans);font-weight:600;font-size:.95rem;cursor:pointer;transition:.15s}
-.btn:hover{background:var(--blue-dk)} .btn:disabled{opacity:.55;cursor:default}
 .btn.sm{padding:10px 18px;font-size:.88rem}
-/* header block */
-.dealhead{background:var(--navy);color:#fff;border-radius:14px;padding:28px;margin-bottom:18px}
 .dealhead h1{color:#fff;font-size:1.5rem;margin-bottom:5px}
 .dealhead .meta{color:#9FB2CC;font-size:.88rem}
 .dealgrid{display:flex;gap:34px;flex-wrap:wrap;margin-top:20px;padding-top:18px;border-top:1px solid rgba(255,255,255,.14)}
 .dealgrid div .l{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:#8CA2C0}
 .dealgrid div .v{font-family:var(--serif);font-size:1.1rem;color:#fff;font-weight:600;margin-top:3px}
-/* stepper */
-.steps{list-style:none}
 .stp{display:flex;gap:15px;padding:11px 0}
 .dot{flex:0 0 26px;height:26px;border-radius:50%;border:2px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--muted);margin-top:1px}
 .stp.done .dot{background:var(--ok);border-color:var(--ok);color:#fff}
 .stp.now .dot{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 0 0 4px rgba(47,107,235,.15)}
 .stp .t{font-weight:600;color:var(--muted);font-size:.95rem}
-.stp.done .t{color:var(--ink)} .stp.now .t{color:var(--blue)}
+.stp.done .t{color:var(--ink)}
+.stp.now .t{color:var(--blue)}
 .stp .d{font-size:.83rem;color:var(--muted)}
 .badge{display:inline-block;background:#EAF1FE;color:var(--blue);font-size:.72rem;font-weight:700;letter-spacing:.06em;padding:4px 11px;border-radius:20px;text-transform:uppercase}
-/* lists */
-.req{display:flex;align-items:flex-start;gap:11px;padding:11px 0;border-bottom:1px solid var(--line);font-size:.94rem}
 .req:last-child{border-bottom:none}
 .req .box{flex:0 0 18px;height:18px;border:2px solid #C6D3E6;border-radius:5px;margin-top:3px}
 .req.have .box{background:var(--ok);border-color:var(--ok)}
@@ -60,8 +40,6 @@ input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,1
 .filerow{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:.9rem}
 .filerow:last-child{border-bottom:none}
 .filerow .ok{color:var(--ok);font-weight:600;font-size:.8rem}
-/* upload */
-.drop{border:1.5px dashed #C6D3E6;border-radius:11px;padding:22px;text-align:center;background:#FAFCFF;cursor:pointer;display:block}
 .drop:hover,.drop.over{border-color:var(--blue);background:#F2F7FF}
 .drop input{display:none}
 .drop .t{font-weight:600;color:var(--ink);font-size:.93rem}
@@ -74,27 +52,38 @@ input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,1
 .foot a{color:var(--blue)}
 .hide{display:none}
 .spin{display:inline-block;width:15px;height:15px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:7px}
-@keyframes sp{to{transform:rotate(360deg)}}
-@media(max-width:640px){.dealgrid{gap:20px}.card{padding:20px}}
+.dealgrid{gap:20px}
+.card{padding:20px}
+.gate{max-width:430px;margin:60px auto;text-align:center}
+body{background:var(--soft)}
 </style>
 </head>
 <body>
-
 <header>
   <div class="wrap nav">
-    <a class="brand" href="index.html">
-      <svg width="34" height="34" viewBox="0 0 64 64">
-        <polygon points="22,7 3,57 41,57" fill="#0C1A2E"/><polygon points="42,7 23,57 61,57" fill="#2F6BEB"/>
-        <polygon points="32,33.3 41,57 23,57" fill="#173463"/>
-        <rect x="11" y="38.5" width="22" height="3.8" fill="#fff"/><rect x="31" y="38.5" width="22" height="3.8" fill="#fff"/>
-      </svg>
-      <span><span class="n1">ATZI</span><span class="n2">ADVISORY</span></span>
-    </a>
-    <span class="tagpill">Client Portal</span>
+    <a class="brand" href="index.html"><svg width="36" height="36" viewBox="0 0 64 64" aria-hidden="true"><polygon points="22,7 3,57 41,57" fill="#0C1A2E"/><polygon points="42,7 23,57 61,57" fill="#2F6BEB"/><polygon points="32,33.3 41,57 23,57" fill="#173463"/><rect x="11" y="38.5" width="22" height="3.8" fill="#fff"/><rect x="31" y="38.5" width="22" height="3.8" fill="#fff"/></svg>
+      <span><span class="n1">ATZI</span><span class="n2">ADVISORY</span></span></a>
+    <nav class="menu" id="menu">
+      <a href="what-we-do.html">What We Do</a>
+      <a href="process.html">Our Process</a>
+      <a href="financing.html">Financing</a>
+      <a href="who-we-serve.html">Who We Serve</a>
+      <div class="drop">
+        <span class="dt" tabindex="0">Apply Now <span class="car">&#9660;</span></span>
+        <div class="panel">
+          <a href="apply-borrower.html"><span class="ic">B</span><span><span class="tt">Borrower Application</span><span class="ds">You have a deal and need capital. Submit it for review.</span></span></a>
+          <a href="apply-lender.html"><span class="ic">L</span><span><span class="tt">Lender Registration</span><span class="ds">Tell us your box and receive deals that match it.</span></span></a>
+          <a href="apply-partner.html"><span class="ic">R</span><span><span class="tt">Referral Partners</span><span class="ds">Refer a client who needs debt and earn on every close.</span></span></a>
+        </div>
+      </div>
+      <a href="portal.html" class="on">Client Portal</a>
+    </nav>
+    <a href="apply-borrower.html" class="btn navcta">Apply for Financing</a>
+    <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
 </header>
-
 <main>
+
   <!-- GATE -->
   <div class="wrap gate" id="gate">
     <div class="card">
@@ -111,13 +100,13 @@ input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,1
   <!-- PORTAL -->
   <div class="wrap hide" id="view">
     <div class="dealhead">
-      <h1 id="pProp">—</h1>
+      <h1 id="pProp">&#8212;</h1>
       <div class="meta"><span id="pName"></span> &middot; Submitted <span id="pDate"></span> &middot; Ref <span id="pRef"></span></div>
       <div class="dealgrid">
-        <div><div class="l">Loan amount</div><div class="v" id="pAmt">—</div></div>
-        <div><div class="l">Purpose</div><div class="v" id="pPurp">—</div></div>
-        <div><div class="l">Current stage</div><div class="v" id="pStage">—</div></div>
-        <div id="pCloseWrap" class="hide"><div class="l">Target close</div><div class="v" id="pClose">—</div></div>
+        <div><div class="l">Loan amount</div><div class="v" id="pAmt">&#8212;</div></div>
+        <div><div class="l">Purpose</div><div class="v" id="pPurp">&#8212;</div></div>
+        <div><div class="l">Current stage</div><div class="v" id="pStage">&#8212;</div></div>
+        <div id="pCloseWrap" class="hide"><div class="l">Target close</div><div class="v" id="pClose">&#8212;</div></div>
       </div>
     </div>
 
@@ -171,8 +160,8 @@ input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,1
     ATZI Advisory &middot; Confidential. This portal reflects the current status of your financing request and is not a commitment to lend.
   </div>
 </main>
-
 <script>
+
 var GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwwl72XOJgQqp5CdjNwdPgGH-TFCU66S0xQmhcrYjqAW0HTujvffWWw7p2ywflWH3Vv/exec';
 var token='', queue=[];
 
@@ -201,8 +190,8 @@ function render(d){
   $('pName').textContent=d.name||'';
   $('pDate').textContent=d.received||'';
   $('pRef').textContent=token;
-  $('pAmt').textContent=d.loanAmount||'—';
-  $('pPurp').textContent=d.purpose||'—';
+  $('pAmt').textContent=d.loanAmount||'&#8212;';
+  $('pPurp').textContent=d.purpose||'&#8212;';
   $('pStage').textContent=d.stage||'Received';
   if(d.targetClose){$('pClose').textContent=d.targetClose;$('pCloseWrap').classList.remove('hide')}
   if(d.nextStep) $('pNext').textContent=d.nextStep;
@@ -298,6 +287,36 @@ upBtn.onclick=function(){
   var m=location.search.match(/[?&]id=([^&]+)/);
   if(m){$('tokenIn').value=decodeURIComponent(m[1]).toUpperCase();load($('tokenIn').value)}
 })();
+
+</script>
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div class="fbrand">
+        <div style="display:flex;align-items:center;gap:11px">
+          <svg width="34" height="34" viewBox="0 0 64 64"><polygon points="22,7 3,57 41,57" fill="#fff" opacity=".92"/><polygon points="42,7 23,57 61,57" fill="#2F6BEB"/><polygon points="32,33.3 41,57 23,57" fill="#23457F"/><rect x="11" y="38.5" width="22" height="3.8" fill="#0C1A2E"/><rect x="31" y="38.5" width="22" height="3.8" fill="#0C1A2E"/></svg>
+          <span class="n1">ATZI ADVISORY</span>
+        </div>
+        <p>Commercial real estate financing advisory. We structure and place bridge, hard money, construction and conventional debt from $1M to $20M.</p>
+      </div>
+      <div><h4>Financing</h4>
+        <a href="financing.html">Bridge</a><a href="financing.html">Hard Money</a><a href="financing.html">Construction</a><a href="financing.html">Conventional</a><a href="financing.html">Refinance</a></div>
+      <div><h4>Company</h4>
+        <a href="what-we-do.html">What We Do</a><a href="process.html">Our Process</a><a href="who-we-serve.html">Who We Serve</a><a href="index.html#faq">FAQ</a></div>
+      <div><h4>Get Started</h4>
+        <a href="apply-borrower.html">Borrower Application</a><a href="apply-lender.html">Lender Registration</a><a href="apply-partner.html">Referral Partners</a><a href="portal.html">Client Portal</a>
+        <a href="mailto:ben.k@atziadvisory.com">ben.k@atziadvisory.com</a></div>
+    </div>
+    <div class="legal">
+      <p>&copy; <span id="yr">2026</span> ATZI Advisory. All rights reserved.</p>
+      <p>ATZI Advisory is a commercial real estate financing advisory firm. We are not a lender and do not make loan commitments. All financing is subject to lender approval, underwriting and final documentation. Loan terms, rates and availability are determined by third-party lenders and are subject to change. Nothing on this site constitutes a commitment to lend, an offer of credit, or legal, tax, investment or accounting advice. Information submitted is treated confidentially and shared only with lenders considered for the transaction.</p>
+    </div>
+  </div>
+</footer>
+<script>
+document.getElementById('yr').textContent=new Date().getFullYear();
+var bg=document.getElementById('burger');
+if(bg) bg.onclick=function(){document.getElementById('menu').classList.toggle('open')};
 </script>
 </body>
 </html>
