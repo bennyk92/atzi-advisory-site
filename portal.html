@@ -57,6 +57,14 @@ input[type=text]{width:100%;padding:13px 15px;border:1px solid var(--line);borde
 .gate{max-width:430px;margin:60px auto;text-align:center}
 body{background:var(--soft)}
 </style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FQ5RT74VH5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FQ5RT74VH5');
+</script>
 </head>
 <body>
 <header>
@@ -176,6 +184,7 @@ function load(t){
   post({action:'status',token:t}).then(function(d){
     if(!d||!d.success) throw new Error('nf');
     token=t; render(d);
+    if(typeof gtag==='function'){gtag('event','portal_view');}
     $('gate').classList.add('hide'); $('view').classList.remove('hide');
     try{history.replaceState(null,'','portal.html?id='+t)}catch(e){}
   }).catch(function(){
@@ -307,7 +316,7 @@ upBtn.onclick=function(){
         <a href="mailto:ben.k@atziadvisory.com">ben.k@atziadvisory.com</a></div>
     </div>
     <div class="legal">
-      <p>&copy; <span id="yr">2026</span> ATZI Advisory. All rights reserved.</p>
+      <p>&copy; <span id="yr">2026</span> ATZI Advisory. All rights reserved. <a href="admin.html" style="display:inline;color:#3D4E68;font-size:.72rem;margin-left:8px">&middot;</a></p>
       <p>ATZI Advisory is a commercial real estate financing advisory firm. We are not a lender and do not make loan commitments. All financing is subject to lender approval, underwriting and final documentation. Loan terms, rates and availability are determined by third-party lenders and are subject to change. Nothing on this site constitutes a commitment to lend, an offer of credit, or legal, tax, investment or accounting advice. Information submitted is treated confidentially and shared only with lenders considered for the transaction.</p>
     </div>
   </div>
