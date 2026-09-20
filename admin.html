@@ -249,6 +249,14 @@ function card(d){
             (d.closedAmount?'<b>Closed:</b> '+money(d.closedAmount)+' &middot; fee '+money(d.feeEarned)+'<br>':'')+
             (d.folder?'<a class="folder" href="'+d.folder+'" target="_blank">Open Drive folder &rarr;</a>':'')+
           '</div>'+
+          '<div class="lbl" style="margin-top:18px">Underwriting model</div>'+
+          '<div class="row">'+
+            '<button class="sbtn" data-a="uw-download" data-t="'+d.token+'">Download underwriting</button>'+
+            '<label class="sbtn" style="cursor:pointer">Upload filled underwriting'+
+              '<input type="file" id="uwf-'+d.token+'" data-t="'+d.token+'" accept=".xlsx" style="display:none">'+
+            '</label>'+
+          '</div>'+
+          '<div class="info" id="uwmsg-'+d.token+'" style="margin-top:8px"></div>'+
         '</div>'+
       '</div>'+
     '</div></div>';
@@ -286,12 +294,58 @@ function bind(){
       var label=b.textContent; b.disabled=true; b.textContent='Working...';
       post(body).then(function(r){
         if(!r||!r.success) throw new Error((r&&r.error)||'Failed');
-        note($('msg'),'ok',r.message||'Updated');
-        load();
+        note($('msg'),'ok',r.message||'Saved');
+        var deal=DEALS.filter(function(x){return x.token===t})[0];
+        if(deal){
+          if(body.what==='stage') deal.stage=body.value;
+          if(body.what==='note') deal.nextStep=body.note;
+          if(body.what==='docs') deal.docsRequested=body.note;
+        }
+        if(body.what==='stage'){
+          var wrap=document.getElementById('d-'+t);
+          if(wrap){ wrap.querySelectorAll('[data-a="stage"]').forEach(function(sb){
+            sb.classList.toggle('on', sb.dataset.v===body.value); }); }
+        }
+        if(body.what==='outcome'||body.what==='reopen') load();
+        b.disabled=false; b.textContent=label;
       }).catch(function(err){
         note($('msg'),'err','That did not save. '+(err.message||''));
         b.disabled=false; b.textContent=label;
       });
+    };
+  });
+  document.querySelectorAll('[data-a="uw-download"]').forEach(function(b){
+    b.onclick=function(e){
+      e.stopPropagation();
+      var t=b.dataset.t, m=$('uwmsg-'+t);
+      b.disabled=true; var lbl=b.textContent; b.textContent='Preparing...';
+      post({action:'adminTemplate',token:t}).then(function(r){
+        b.disabled=false; b.textContent=lbl;
+        if(!r||!r.success){ m.innerHTML='<span style="color:#B4402F">'+((r&&r.error)||'Error')+'</span>'; return; }
+        if(!r.hasTemplate){ m.innerHTML='<span style="color:#C9822C">'+r.message+'</span>'; return; }
+        window.open(r.downloadUrl,'_blank');
+        m.innerHTML='Downloaded <b>'+r.fileName+'</b>';
+      }).catch(function(err){ b.disabled=false; b.textContent=lbl;
+        m.innerHTML='<span style="color:#B4402F">'+(err.message||'Error')+'</span>'; });
+    };
+  });
+  document.querySelectorAll('input[type=file][id^="uwf-"]').forEach(function(inp){
+    inp.onchange=function(){
+      var t=inp.dataset.t, m=$('uwmsg-'+t), file=inp.files[0];
+      if(!file) return;
+      m.innerHTML='Uploading <b>'+file.name+'</b>&hellip;';
+      var reader=new FileReader();
+      reader.onload=function(){
+        var b64=String(reader.result).split(',')[1];
+        post({action:'adminSaveUw',token:t,fileName:file.name,
+              mimeType:file.type||'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+              data:b64}).then(function(r){
+          if(!r||!r.success){ m.innerHTML='<span style="color:#B4402F">'+((r&&r.error)||'Upload failed')+'</span>'; return; }
+          m.innerHTML='Saved to the deal folder as <b>'+r.savedAs+'</b>. <a class="folder" href="'+r.folderUrl+'" target="_blank">Open folder &rarr;</a>';
+          inp.value='';
+        }).catch(function(err){ m.innerHTML='<span style="color:#B4402F">'+(err.message||'Upload failed')+'</span>'; });
+      };
+      reader.readAsDataURL(file);
     };
   });
 }
